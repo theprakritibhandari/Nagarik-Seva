@@ -1,14 +1,26 @@
 <?php
 
-$host = "localhost";
-$username = "root";
-$password = "";
-$database = "nagarik_seva";
+$host = getenv("DB_HOST");
+$port = getenv("DB_PORT");
+$username = getenv("DB_USER");
+$password = getenv("DB_PASSWORD");
+$database = getenv("DB_NAME");
 
-$conn = new mysqli($host, $username, $password, $database);
+$conn = mysqli_init();
 
-if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
+mysqli_ssl_set($conn, NULL, NULL, NULL, NULL, NULL);
+
+if (!mysqli_real_connect(
+    $conn,
+    $host,
+    $username,
+    $password,
+    $database,
+    $port,
+    NULL,
+    MYSQLI_CLIENT_SSL
+)) {
+    die("Database connection failed: " . mysqli_connect_error());
 }
 
 $conn->set_charset("utf8mb4");
